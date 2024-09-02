@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NotesService {
 
-  // token = localStorage.getItem("token");
+ 
   url=environment.baseUrl;
   constructor(private httpClient:HttpClient) { }
  
