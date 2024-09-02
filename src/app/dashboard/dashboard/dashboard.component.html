@@ -1,0 +1,28 @@
+<dx-scroll-view class="view-wrapper-scroll">
+    <div class="view-wrapper" style="padding-top: 0px !important; padding-bottom: 0px !important;" > 
+  
+      <div class="panels theme-dependent">
+        <div class="left"  >
+          <contact-form
+            [contactData]="contactData"
+            [isLoading]="isLoading"
+          ></contact-form>
+        </div>
+  
+        <div class="right theme-dependent">
+          <contact-cards
+            style="height: 550px; overflow-y: hidden  !important;"
+            [isLoading]="isLoading"
+            [contactName]="contactData?.name"
+            [tasks]="contactData?.tasks"
+            [activities]="contactData?.activities"
+            [activeOpportunities]="activeOpportunities"
+            [closedOpportunities]="closedOpportunities"
+            [notes]="contactNotes"
+            [messages]="contactMessages"
+          ></contact-cards>
+        </div>
+      </div>
+    </div>
+  </dx-scroll-view>
+  

@@ -1,0 +1,156 @@
+<dx-data-grid class="grid-container"
+  id="tasks-grid"
+  class="theme-dependent"
+  height="100%"
+  [dataSource]="tasks"
+  (onEditingStart)="toogleUseNavigation()"
+  (onEditCanceled)="toogleUseNavigation()"
+  (onSaved)="toogleUseNavigation()"
+  (onRowUpdating)="onRowUpdating($event)"
+  [hoverStateEnabled]="true"
+  [columnAutoWidth]="true"
+  [showBorders]="true"
+  [height]="'600'"
+  [rowDragging]="{
+    allowReordering: false,
+    showDragIcons: false,
+  }"
+>
+  <dxo-paging [pageSize]="15"></dxo-paging>
+  <dxo-pager [visible]="true" [showPageSizeSelector]="true"></dxo-pager>
+  <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" > </dxo-editing>
+  <dxo-selection
+    selectAllMode="allPages"
+    showCheckBoxesMode="always"
+    mode="multiple"
+  ></dxo-selection>
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+  <dxi-column dataField="title" caption="Title" [hidingPriority]="7">
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column
+    dataField="priority"
+    caption="Priority"
+    [hidingPriority]="4"
+    cellTemplate="cellPriority"
+    editCellTemplate="editCellPriority"
+  >
+    <dxo-lookup [dataSource]="priorityList"></dxo-lookup>
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+
+
+  <dxi-column
+  dataField="startDate"
+  caption="Start Date"
+  dataType="date"
+  sortOrder="asc"
+  [hidingPriority]="1"
+  [format]="{ type: 'datetime', formatter: customDateFormatter }"
+>
+  <dxi-validation-rule type="required"></dxi-validation-rule>
+</dxi-column>
+  <dxi-column
+    dataField="dueDate"
+    caption="Due Date"
+    dataType="date"
+    [hidingPriority]="2"
+  >
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+
+
+
+  <dxi-column dataField="createdBy"  caption="Created By" [hidingPriority]="5" >
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column 
+  dataField="assignedToId"  
+  caption="Assigned To" 
+  [hidingPriority]="5"
+  [lookup]="{
+      dataSource: usersList, 
+      displayExpr: 'userName', 
+      valueExpr: 'id'
+  }">
+  <dxi-validation-rule type="required"></dxi-validation-rule>
+</dxi-column>
+
+  <dxi-column
+    dataField="status"
+    caption="Status"
+    [hidingPriority]="3"
+    [minWidth]="120"
+    cellTemplate="cellStatus"
+    editCellTemplate="editCellStatus"
+  >
+    <dxo-lookup [dataSource]="statusList"></dxo-lookup>
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column type="buttons" caption="Action">
+    <dxi-button name="View" icon="fa-solid fa-eye" [onClick]="navigateToDetails" ></dxi-button>
+    <dxi-button name="edit"></dxi-button>
+    <dxi-button name="delete" [onClick]="deleteTask" ></dxi-button>
+  </dxi-column>
+  <div *dxTemplate="let cellInfo of 'cellPriority'">
+    <status-indicator
+      [isField]="false"
+      [showBar]="true"
+      [value]="cellInfo.data.priority"
+    >
+    </status-indicator>
+  </div>
+
+  <div *dxTemplate="let cellInfo of 'editCellPriority'">
+    <dx-select-box
+      class="edit-cell"
+      [(value)]="cellInfo.value"
+      [items]="priorityList"
+      (onValueChanged)="cellInfo.setValue($event.value)"
+      (onSelectionChanged)="cellInfo.component.updateDimensions()"
+      fieldTemplate="field"
+    >
+      <div *dxTemplate="let data of 'field'">
+        <status-indicator
+          [showBar]="true"
+          [value]="cellInfo.value"
+        ></status-indicator>
+      </div>
+      <div *dxTemplate="let data of 'item'">
+        <status-indicator
+          [showBar]="true"
+          [isField]="false"
+          [value]="data"
+        ></status-indicator>
+      </div>
+    </dx-select-box>
+  </div>
+
+  <div *dxTemplate="let cellInfo of 'cellStatus'">
+    <status-indicator
+      [isField]="false"
+      [value]="cellInfo.data.status"
+    ></status-indicator>
+  </div>
+
+  <div *dxTemplate="let cellInfo of 'editCellStatus'">
+    <dx-select-box
+      class="edit-cell"
+      [(value)]="cellInfo.value"
+      [items]="statusList"
+      (onValueChanged)="cellInfo.setValue($event.value)"
+      (onSelectionChanged)="cellInfo.component.updateDimensions()"
+      fieldTemplate="field"
+    >
+      <div *dxTemplate="let data of 'field'">
+        <status-indicator [value]="cellInfo.value"></status-indicator>
+      </div>
+      <div *dxTemplate="let s of 'item'">
+        <status-indicator [isField]="false" [value]="s"></status-indicator>
+      </div>
+    </dx-select-box>
+  </div>
+</dx-data-grid>

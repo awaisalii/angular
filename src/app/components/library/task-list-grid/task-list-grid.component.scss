@@ -1,0 +1,15 @@
+@use "../../../../variables.scss" as *;
+@use "sass:math";
+
+#tasks-grid {
+  min-height: 300px;
+}
+
+.edit-cell {
+  position: relative;
+}
+.grid-container {
+  height: 400px; /* Or whatever height you need */
+  overflow-y: auto; /* Enables vertical scrolling */
+  overflow-x: hidden; /* Optional, if you don't want horizontal scrolling */
+}
